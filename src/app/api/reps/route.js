@@ -1,11 +1,61 @@
+import { getState, saveState, isConfigured } from '../../../lib/reps-server'
+
+export const dynamic = 'force-dynamic'
+
+export async function GET(request) {
+  if (!isConfigured) {
+    return new Response(JSON.stringify({ error: 'Supabase non configuré' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  const deviceId = request.nextUrl.searchParams.get('device_id')
+  if (!deviceId) {
+    return new Response(JSON.stringify({ error: 'device_id manquant' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  try {
+    const data = await getState(deviceId)
+    return Response.json({ data })
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+}
+
 export async function POST(request) {
-
+  if (!isConfigured) {
+    return new Response(JSON.stringify({ error: 'Supabase non configuré' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
+  try {
     const body = await request.json()
-
-    console.log("Données reçues sur le serveur :", body);
-  return Response.json({
-    success: true,
-    message: "Données reçues avec succès sur le serveur.",
-    data: body
-  });
+    const deviceId = body?.device_id
+    const data = body?.data
+    if (!deviceId || typeof deviceId !== 'string') {
+      return new Response(JSON.stringify({ error: 'device_id invalide' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+    if (!data || typeof data !== 'object' || Array.isArray(data)) {
+      return new Response(JSON.stringify({ error: 'data invalide' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+    await saveState(deviceId, data)
+    return Response.json({ success: true })
+  } catch (err) {
+    return new Response(JSON.stringify({ error: err.message }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
+  }
 }

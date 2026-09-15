@@ -3,7 +3,7 @@
 import React, { useMemo } from 'react'
 import { DAYS_ORDER, calcDayStats, calcGlobalStats } from '../utils/stats'
 
-const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport, isSupabase }) => {
+const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport, syncStatus }) => {
   const global = useMemo(() => calcGlobalStats(plans, todayReps, history), [plans, todayReps, history])
 
   const dayStatsMap = useMemo(() => {
@@ -138,11 +138,11 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
             <input type="file" accept=".json" onChange={onImport} className="hidden" />
           </label>
         </div>
-        {isSupabase ? (
-          <p className="text-[11px] text-green-600 text-center">✓ Sync Supabase (device_id sans auth)</p>
-        ) : (
-          <p className="text-[11px] text-gray-400 text-center">Local only — crée .env avec NEXT_PUBLIC_SUPABASE_URL pour sync</p>
+        {syncStatus === 'off' && (
+          <p className="text-[11px] text-gray-400 text-center">Sync serveur désactivé — renseigne SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY pour exporter vers le serveur</p>
         )}
+        {syncStatus === 'saved' && <p className="text-[11px] text-green-600 text-center">✓ Synchronisé avec le serveur (device_id sans auth)</p>}
+        {syncStatus === 'error' && <p className="text-[11px] text-red-600 text-center">Échec de la synchronisation au serveur</p>}
         <div className="text-center py-3 sm:py-4 bg-gray-50 rounded-xl border border-dashed border-gray-200 px-3">
           <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide">&quot;OBJECTIF : SURCHARGE PROGRESSIVE&quot;</p>
           <p className="text-[11px] sm:text-xs text-gray-400 mt-1">Consistez, progressez, répétez.</p>

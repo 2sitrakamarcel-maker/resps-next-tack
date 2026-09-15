@@ -6,7 +6,7 @@ import HomeView from './HomeView'
 import StatsView from './StatsView'
 import PlanView from './PlanView'
 import { useLocalStorage } from '../hooks/useLocalStorage'
-import { getSupabase, isSupabaseConfigured, getDeviceId } from '../lib/supabase'
+import { getDeviceId } from '../lib/device'
 import { getISOWeekKey, getPreviousSunday } from '../utils/week'
 
 const STORAGE_PLANS = 'reps-tracker:plans-v1'
@@ -41,43 +41,67 @@ const Homepage = () => {
   const [history, setHistory] = useLocalStorage(STORAGE_HISTORY, {})
   const [storedWeek, setStoredWeek] = useLocalStorage(STORAGE_WEEK, '')
   const [weekNotice, setWeekNotice] = useState(false)
+  const [syncStatus, setSyncStatus] = useState('idle')
+  const [restored, setRestored] = useState(false)
 
-  // Supabase sync without auth - device_id
+  // Restauration au montage depuis l'API (BFF) — le serveur gagne
   useEffect(() => {
-    if (!isSupabaseConfigured) return
     const deviceId = getDeviceId()
-    // load from supabase on mount
-    getSupabase().then((client) => {
-      if (!client) return
-      client
-        .from('reps_data')
-        .select('data')
-        .eq('device_id', deviceId)
-        .single()
-        .then(({ data }) => {
-          if (data?.data) {
-            if (data.data.plans) setPlans(data.data.plans)
-            if (data.data.todayReps) setTodayReps(data.data.todayReps)
-            if (data.data.history) setHistory(data.data.history)
-          }
-        })
-    })
-  }, [setPlans, setTodayReps, setHistory])
+    if (!deviceId) return
+    let cancelled = false
+    ;(async () => {
+      try {
+        const res = await fetch(`/api/reps?device_id=${encodeURIComponent(deviceId)}`)
+        if (cancelled) return
+        if (res.status === 503) {
+          setSyncStatus('off')
+          return
+        }
+        if (!res.ok) return
+        const json = await res.json()
+        if (cancelled) return
+        const d = json?.data
+        if (d) {
+          if (d.plans) setPlans(d.plans)
+          if (d.todayReps) setTodayReps(d.todayReps)
+          if (d.history) setHistory(d.history)
+          if (d.week) setStoredWeek(d.week)
+          setSyncStatus('saved')
+        }
+      } catch {
+        if (!cancelled) setSyncStatus('error')
+      } finally {
+        if (!cancelled) setRestored(true)
+      }
+    })()
+    return () => {
+      cancelled = true
+    }
+  }, [setPlans, setTodayReps, setHistory, setStoredWeek])
 
+  // Auto-save debounced vers l'API
   useEffect(() => {
-    if (!isSupabaseConfigured) return
+    if (!restored) return
     const deviceId = getDeviceId()
+    if (!deviceId) return
     const timeout = setTimeout(() => {
-      getSupabase().then((client) => {
-        if (!client) return
-        client
-          .from('reps_data')
-          .upsert({ device_id: deviceId, data: { plans, todayReps, history }, updated_at: new Date().toISOString() })
-          .then(() => {})
+      fetch('/api/reps', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ device_id: deviceId, data: { plans, todayReps, history, week: storedWeek } }),
       })
+        .then((res) => {
+          if (res.status === 503) {
+            setSyncStatus('off')
+            return
+          }
+          if (!res.ok) throw new Error('save failed')
+          setSyncStatus('saved')
+        })
+        .catch(() => setSyncStatus('error'))
     }, 800)
     return () => clearTimeout(timeout)
-  }, [plans, todayReps, history])
+  }, [plans, todayReps, history, storedWeek, restored])
 
   useEffect(() => {
     const handleWeekCheck = () => {
@@ -152,7 +176,7 @@ const Homepage = () => {
             <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} />
           )}
           {activeTab === 'Stats' && (
-            <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} isSupabase={isSupabaseConfigured} />
+            <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
           )}
           {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlans} />}
         </main>
@@ -162,7 +186,11 @@ const Homepage = () => {
         <h2 className="text-sm sm:text-2xl font-black text-gray-800 tracking-wider uppercase">
           &quot;OBJECTIF : SURCHARGE PROGRESSIVE&quot;
         </h2>
-        {!isSupabaseConfigured && <p className="text-[11px] text-gray-400 mt-1">Local only — ajoute NEXT_PUBLIC_SUPABASE_URL pour sync</p>}
+        {syncStatus === 'off' && (
+          <p className="text-[11px] text-gray-400 mt-1">Sync serveur désactivé — renseigne SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY dans .env.local</p>
+        )}
+        {syncStatus === 'saved' && <p className="text-[11px] text-green-600 mt-1">✓ Synchronisé avec le serveur</p>}
+        {syncStatus === 'error' && <p className="text-[11px] text-red-600 mt-1">Échec de la synchronisation au serveur</p>}
       </footer>
     </div>
   )
