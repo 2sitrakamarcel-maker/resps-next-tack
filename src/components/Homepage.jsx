@@ -151,6 +151,25 @@ const Homepage = () => {
     reader.readAsText(file)
   }
 
+  const [publishStatus, setPublishStatus] = useState('idle')
+  const publishNow = async () => {
+    const deviceId = getDeviceId()
+    if (!deviceId) return
+    setPublishStatus('loading')
+    try {
+      const res = await fetch(`/api/cron/publish?device_id=${encodeURIComponent(deviceId)}&dryRun=0`, {
+        headers: { 'x-cron-secret': 'f21cd3034bf4e77c669b85e711502766514cfa753e5da1f36ce7ca44ef895fd4' },
+      })
+      const json = await res.json()
+      if (!res.ok) throw new Error(json.error || 'publish failed')
+      setPublishStatus('ok:' + (json.facebookPhotoId || json.postId || 'posted'))
+      setTimeout(() => setPublishStatus('idle'), 4000)
+    } catch (err) {
+      setPublishStatus('error:' + err.message)
+      setTimeout(() => setPublishStatus('idle'), 4000)
+    }
+  }
+
   return (
     <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-white to-purple-100 p-0 sm:p-4 md:p-8 flex flex-col items-center">
       <div className="w-full sm:max-w-5xl border-0 sm:border-4 border-[#9747FF] rounded-none sm:rounded-[36px] overflow-hidden bg-white shadow-none sm:shadow-2xl flex flex-col min-h-[100dvh] sm:min-h-[85vh]">
@@ -179,6 +198,17 @@ const Homepage = () => {
             <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
           )}
           {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlans} />}
+          <div className="mt-4 flex flex-col items-center gap-2">
+            <button
+              onClick={publishNow}
+              disabled={publishStatus.startsWith('loading')}
+              className="px-4 py-2 rounded-xl bg-[#9747FF] text-white font-black text-sm hover:bg-[#7C3AED] disabled:opacity-50 min-h-[44px]"
+            >
+              {publishStatus.startsWith('loading') ? 'Publication...' : 'Publier maintenant (test FB image)'}
+            </button>
+            {publishStatus !== 'idle' && <p className="text-[11px] text-gray-500">{publishStatus}</p>}
+            <a href={`/api/og-image?device_id=${typeof window !== 'undefined' ? (window.localStorage.getItem('reps-tracker:device_id') || '') : ''}`} target="_blank" rel="noreferrer" className="text-[11px] text-[#9747FF] underline">Aperçu image (og-image)</a>
+          </div>
         </main>
       </div>
 

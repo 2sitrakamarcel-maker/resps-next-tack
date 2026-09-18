@@ -36,26 +36,17 @@ export async function POST(request) {
   }
   try {
     const body = await request.json()
-    const deviceId = body?.device_id
-    const data = body?.data
-    if (!deviceId || typeof deviceId !== 'string') {
-      return new Response(JSON.stringify({ error: 'device_id invalide' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-    if (!data || typeof data !== 'object' || Array.isArray(data)) {
-      return new Response(JSON.stringify({ error: 'data invalide' }), {
+    const deviceId = body.device_id
+    const data = body.data
+    if (!deviceId || !data) {
+      return new Response(JSON.stringify({ error: 'device_id et data requis' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' },
       })
     }
     await saveState(deviceId, data)
     return Response.json({ success: true })
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    })
+  } catch (error) {
+    return Response.json({ success: false, error: error.message }, { status: 500 })
   }
 }
