@@ -152,6 +152,9 @@ const Homepage = () => {
     reader.readAsText(file)
   }
 
+  const [ogDeviceId, setOgDeviceId] = useState('')
+  useEffect(() => { setOgDeviceId(window.localStorage.getItem('reps-tracker:device_id') || '') }, [restored])
+
   const [publishStatus, setPublishStatus] = useState('idle')
   const publishNow = async () => {
     const deviceId = getDeviceId()
@@ -214,7 +217,7 @@ const Homepage = () => {
               {publishStatus.startsWith('loading') ? 'Publication...' : 'Publier maintenant (test FB image)'}
             </button>
             {publishStatus !== 'idle' && <p className="text-[11px] text-gray-500">{publishStatus}</p>}
-            <a href={`/api/og-image?device_id=${typeof window !== 'undefined' ? (window.localStorage.getItem('reps-tracker:device_id') || '') : ''}`} target="_blank" rel="noreferrer" className="text-[11px] text-[#9747FF] underline">Aperçu image (og-image)</a>
+            <a href={`/api/og-image?device_id=${ogDeviceId}`} target="_blank" rel="noreferrer" className="text-[11px] text-[#9747FF] underline">Aperçu image (og-image)</a>
           </div>
         </main>
       </div>
