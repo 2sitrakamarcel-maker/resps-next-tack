@@ -45,6 +45,16 @@ export async function GET(request) {
   const caption = buildCaption(data, new Date())
   const svg = buildSvg(data, new Date())
 
+  // Anti-double-post: si force!=1, refuse si déjà posté aujourd'hui (même caption)
+  const force = url.searchParams.get('force') === '1'
+  if (!dryRun && !force) {
+    const dayKey = new Date().toISOString().slice(0, 10)
+    const last = data._lastPublish
+    if (last && last.day === dayKey && last.caption === caption) {
+      return Response.json({ success: false, deduped: true, message: 'Déjà publié aujourd’hui avec même contenu', day: dayKey, caption })
+    }
+  }
+
   if (dryRun) {
     return new Response(JSON.stringify({ dryRun: true, deviceId, caption, svgLength: svg.length }), { headers: { 'Content-Type': 'application/json' } })
   }
@@ -82,6 +92,12 @@ export async function GET(request) {
   }
 
   console.log('✅ FB PHOTO PUBLIÉE:', fbData)
+  // Mémorise dernier publish pour dedupe (ne bloque pas le post si save échoue)
+  try {
+    const { saveState } = await import('../../../../lib/reps-server')
+    const dayKey = new Date().toISOString().slice(0, 10)
+    await saveState(deviceId, { ...data, _lastPublish: { day: dayKey, caption, at: new Date().toISOString(), postId: fbData.post_id || fbData.id } })
+  } catch {}
   return Response.json({ success: true, deviceId, caption, facebookPhotoId: fbData.id, postId: fbData.post_id || null, fbData })
 }
 

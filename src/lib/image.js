@@ -7,9 +7,12 @@ function esc(str) {
 export function buildCaption(data, date = new Date()) {
   if (!data) return `🔥 Reps-Tracker — ${date.toLocaleDateString('fr-FR')} — Pas de données 💪`
   const { plans = {}, todayReps = {}, history = {} } = data
-  const global = calcGlobalStats(plans, todayReps, history)
-  const pct = global.globalPctAvg !== null ? ` (${global.globalPctAvg > 0 ? '+' : ''}${global.globalPctAvg.toFixed(1)}%)` : ''
-  return `🔥 Séance du ${date.toLocaleDateString('fr-FR')} — ${global.totalReps} reps validées ! ${global.filled}/${global.totalPlanned} exos remplis${pct} 💪 #RepsTracker`
+  const dayName = ['DIMANCHE','LUNDI','MARDI','MERCREDI','JEUDI','VENDREDI','SAMEDI'][date.getDay()]
+  const dayStats = calcDayStats(dayName, plans, todayReps, history)
+  if (dayStats.total === 0) return `🔥 ${dayName} ${date.toLocaleDateString('fr-FR')} — Repos / pas d’exos planifiés 💪 #RepsTracker`
+  if (dayStats.filled === 0) return `🔥 ${dayName} ${date.toLocaleDateString('fr-FR')} — 0/${dayStats.total} exos remplis — à toi de jouer ! 💪 #RepsTracker`
+  const pct = dayStats.dayPct !== null ? ` (${dayStats.dayPct > 0 ? '+' : ''}${dayStats.dayPct.toFixed(1)}%)` : ''
+  return `🔥 ${dayName} ${date.toLocaleDateString('fr-FR')} — ${dayStats.curTotal} reps sur ${dayStats.total} exos (${dayStats.filled}/${dayStats.total} remplis${pct}) 💪 #RepsTracker`
 }
 
 export function buildSvg(data, date = new Date()) {

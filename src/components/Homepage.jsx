@@ -34,7 +34,8 @@ const initialPlans = {
 
 const Homepage = () => {
   const [activeTab, setActiveTab] = useState('Home')
-  const today = useMemo(() => getTodayName(), [])
+  const [today, setToday] = useState('')
+  useEffect(() => { setToday(getTodayName()) }, [])
 
   const [plans, setPlans] = useLocalStorage(STORAGE_PLANS, initialPlans)
   const [todayReps, setTodayReps] = useLocalStorage(STORAGE_REPS, {})
@@ -173,8 +174,8 @@ const Homepage = () => {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-white to-purple-100 p-0 sm:p-4 md:p-8 flex flex-col items-center">
       <div className="w-full sm:max-w-5xl border-0 sm:border-4 border-[#9747FF] rounded-none sm:rounded-[36px] overflow-hidden bg-white shadow-none sm:shadow-2xl flex flex-col min-h-[100dvh] sm:min-h-[85vh]">
-        <header className="w-full bg-[#9747FF] sticky top-0 z-20">
-          <Navbar activeTab={activeTab} onSelectTab={setActiveTab} selectedDay={today} />
+        <header className="w-full bg-[#9747FF] sticky top-0 z-20" suppressHydrationWarning>
+          <Navbar activeTab={activeTab} onSelectTab={setActiveTab} selectedDay={today || 'LUNDI'} />
         </header>
 
         {weekNotice && (
@@ -191,13 +192,19 @@ const Homepage = () => {
         )}
 
         <main className="flex-1 p-3 sm:p-6 flex flex-col overflow-auto">
-          {activeTab === 'Home' && (
-            <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} />
+          {!today ? (
+            <div className="flex-1 flex items-center justify-center p-8 text-gray-400">Chargement...</div>
+          ) : (
+            <>
+              {activeTab === 'Home' && (
+                <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} />
+              )}
+              {activeTab === 'Stats' && (
+                <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
+              )}
+              {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlans} />}
+            </>
           )}
-          {activeTab === 'Stats' && (
-            <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
-          )}
-          {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlans} />}
           <div className="mt-4 flex flex-col items-center gap-2">
             <button
               onClick={publishNow}
