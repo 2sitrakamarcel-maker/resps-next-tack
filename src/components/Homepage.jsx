@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef, useCallback } from 'react'
 import Navbar from './Navbar'
 import HomeView from './HomeView'
 import StatsView from './StatsView'
@@ -44,8 +44,10 @@ const Homepage = () => {
   const [weekNotice, setWeekNotice] = useState(false)
   const [syncStatus, setSyncStatus] = useState('idle')
   const [restored, setRestored] = useState(false)
+  const hasEditedRef = useRef(false)
+  const setPlansTracked = useCallback((updater) => { hasEditedRef.current = true; setPlans(updater) }, [setPlans])
 
-  // Restauration au montage depuis l'API (BFF) — le serveur gagne
+  // Restauration au montage depuis l'API — local-wins si édité avant fetch
   useEffect(() => {
     const deviceId = getDeviceId()
     if (!deviceId) return
@@ -63,10 +65,10 @@ const Homepage = () => {
         if (cancelled) return
         const d = json?.data
         if (d) {
-          if (d.plans) setPlans(d.plans)
-          if (d.todayReps) setTodayReps(d.todayReps)
-          if (d.history) setHistory(d.history)
-          if (d.week) setStoredWeek(d.week)
+          if (d.plans && !hasEditedRef.current) setPlans(d.plans)
+          if (d.todayReps && !hasEditedRef.current) setTodayReps(d.todayReps)
+          if (d.history && !hasEditedRef.current) setHistory(d.history)
+          if (d.week && !hasEditedRef.current) setStoredWeek(d.week)
           setSyncStatus('saved')
         }
       } catch {
@@ -205,7 +207,7 @@ const Homepage = () => {
               {activeTab === 'Stats' && (
                 <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
               )}
-              {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlans} />}
+              {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlansTracked} />}
             </>
           )}
           <div className="mt-4 flex flex-col items-center gap-2">

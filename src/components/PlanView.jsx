@@ -15,7 +15,7 @@ const PlanView = ({ today, plans, setPlans }) => {
   const addExercise = (day) => {
     setPlans((prev) => ({
       ...prev,
-      [day]: [...prev[day], { id: Date.now(), exercise: '', instruction: '' }],
+      [day]: [...prev[day], { id: crypto.randomUUID(), exercise: '', instruction: '' }],
     }))
   }
 
