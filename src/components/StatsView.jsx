@@ -75,19 +75,20 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
           {DAYS_ORDER.map((day) => {
             const ds = dayStatsMap[day]
             const isToday = day === selectedDay
+            const isRest = ds.total === 0
             return (
-              <div key={day} className={`flex items-center justify-between px-3 sm:px-4 py-2.5 ${isToday ? 'bg-purple-50/60' : 'bg-white'}`}>
+              <div key={day} className={`flex items-center justify-between px-3 sm:px-4 py-2.5 ${isRest ? 'bg-blue-50/50' : isToday ? 'bg-purple-50/60' : 'bg-white'}`}>
                 <div className="flex items-center gap-2 min-w-0">
-                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isToday ? 'bg-[#9747FF]' : 'bg-gray-300'}`} />
-                  <span className={`text-xs sm:text-sm font-bold truncate ${isToday ? 'text-[#9747FF]' : 'text-gray-700'}`}>{day}</span>
-                  {ds.total > 0 && <span className="text-[11px] text-gray-400 hidden sm:inline">· {ds.filled}/{ds.total} exos</span>}
+                  <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${isRest ? 'bg-blue-400' : isToday ? 'bg-[#9747FF]' : 'bg-gray-300'}`} />
+                  <span className={`text-xs sm:text-sm font-bold truncate ${isRest ? 'text-blue-700' : isToday ? 'text-[#9747FF]' : 'text-gray-700'}`}>{day}</span>
+                  {isRest ? <span className="text-[11px] font-black text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">REPOS</span> : ds.total > 0 && <span className="text-[11px] text-gray-400 hidden sm:inline">· {ds.filled}/{ds.total} exos</span>}
                 </div>
                 <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                  <span className="text-xs text-gray-500 hidden sm:inline">
+                  {!isRest && <span className="text-xs text-gray-500 hidden sm:inline">
                     {ds.curTotal} vs {ds.lastTotal || '-'}
-                  </span>
-                  <span className={`text-xs font-black px-2 py-1 rounded-full ${pctBg(ds.dayPct)}`}>
-                    {ds.dayPct !== null ? `${ds.dayPct > 0 ? '+' : ''}${ds.dayPct.toFixed(1)}%` : '-'}
+                  </span>}
+                  <span className={`text-xs font-black px-2 py-1 rounded-full ${isRest ? 'bg-blue-100 text-blue-700' : pctBg(ds.dayPct)}`}>
+                    {isRest ? '💤' : ds.dayPct !== null ? `${ds.dayPct > 0 ? '+' : ''}${ds.dayPct.toFixed(1)}%` : '-'}
                   </span>
                 </div>
               </div>
@@ -101,7 +102,9 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         <div className="bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200">
           <span className="text-xs sm:text-sm font-black text-gray-700 uppercase">Détail — {selectedDay}</span>
         </div>
-        {currentDay.perExo.length === 0 ? (
+        {currentDay.total === 0 ? (
+          <div className="p-4 text-center text-sm text-blue-600 bg-blue-50">💤 Jour de Repos — récup active, bien mérité !</div>
+        ) : currentDay.perExo.length === 0 ? (
           <div className="p-4 text-center text-sm text-gray-400">Aucun exercice planifié. Va dans Plan.</div>
         ) : (
           <div className="divide-y divide-gray-100">

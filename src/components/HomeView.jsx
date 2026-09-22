@@ -73,9 +73,9 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history }) => {
 
   if (dayPlans.length === 0 || dayPlans.every((p) => !p.exercise.trim())) {
     return (
-      <div className="bg-white rounded-xl sm:rounded-2xl border-2 border-dashed border-gray-200 p-6 sm:p-8 w-full max-w-4xl mx-auto my-2 sm:my-4 text-center">
-        <p className="font-bold text-gray-500 text-sm sm:text-base">Aucun exercice planifié pour {selectedDay.toLowerCase()}.</p>
-        <p className="text-xs sm:text-sm text-gray-400 mt-1">Va dans Plan pour ajouter tes exos — ils apparaîtront ici.</p>
+      <div className="bg-blue-50 rounded-xl sm:rounded-2xl border-2 border-blue-200 p-6 sm:p-8 w-full max-w-4xl mx-auto my-2 sm:my-4 text-center">
+        <p className="font-black text-blue-700 text-sm sm:text-base">💤 Jour de Repos — {selectedDay.toLowerCase()}</p>
+        <p className="text-xs sm:text-sm text-blue-500 mt-1">Aucun exercice prévu. Récupération active, hydratation et repos.</p>
       </div>
     )
   }

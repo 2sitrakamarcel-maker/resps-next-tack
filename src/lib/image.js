@@ -80,24 +80,26 @@ export function buildSvg(data, date = new Date()) {
   <text x="60" y="468" font-family="Arial, sans-serif" font-size="18" font-weight="800" fill="white">DÉTAIL — ${esc(dayName)}</text>
   <text x="980" y="468" font-family="Arial, sans-serif" font-size="14" fill="white" opacity="0.8" text-anchor="end">${dayStats.filled}/${dayStats.total} exos • ${dayStats.curTotal} vs ${dayStats.lastTotal || '-'} (${dayPctStr})</text>
 
-  <!-- Week strip -->
+   <!-- Week strip -->
   <g>
     ${DAYS_ORDER.map((d, i) => {
       const ds = calcDayStats(d, plans, todayReps, history)
       const isToday = d === dayName
+      const isRest = ds.total === 0
       const x = 40 + i * 145
-      const bg = isToday ? '#9747FF' : '#F3F4F6'
-      const col = isToday ? 'white' : '#6B7280'
-      const pct = ds.dayPct !== null ? `${ds.dayPct > 0 ? '+' : ''}${ds.dayPct.toFixed(0)}%` : '-'
-      return `<rect x="${x}" y="510" width="135" height="70" rx="14" fill="${bg}" stroke="${isToday ? '#7C3AED' : '#E5E7EB'}"/>
+      const bg = isRest ? (isToday ? '#60A5FA' : '#DBEAFE') : (isToday ? '#9747FF' : '#F3F4F6')
+      const col = isRest ? (isToday ? 'white' : '#1E40AF') : (isToday ? 'white' : '#6B7280')
+      const pct = isRest ? 'REPOS' : (ds.dayPct !== null ? `${ds.dayPct > 0 ? '+' : ''}${ds.dayPct.toFixed(0)}%` : '-')
+      const curLabel = isRest ? '💤 REPOS' : `${ds.curTotal || 0} reps`
+      return `<rect x="${x}" y="510" width="135" height="70" rx="14" fill="${bg}" stroke="${isRest ? '#93C5FD' : isToday ? '#7C3AED' : '#E5E7EB'}"/>
               <text x="${x+67}" y="535" font-family="Arial, sans-serif" font-size="11" font-weight="800" fill="${col}" text-anchor="middle">${d}</text>
-              <text x="${x+67}" y="558" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${col}" text-anchor="middle">${ds.curTotal || 0} reps</text>
+              <text x="${x+67}" y="558" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="${col}" text-anchor="middle">${curLabel}</text>
               <text x="${x+67}" y="572" font-family="Arial, sans-serif" font-size="10" fill="${col}" opacity="0.8" text-anchor="middle">${pct}</text>`
     }).join('')}
   </g>
 
   <!-- Per exo rows -->
-  ${perExoRows || '<text x="540" y="650" font-family="Arial, sans-serif" font-size="16" fill="#9CA3AF" text-anchor="middle">Aucun exercice planifié — va dans Plan</text>'}
+  ${perExoRows || (dayStats.total === 0 ? '<text x="540" y="650" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#1E40AF" text-anchor="middle">💤 Jour de Repos — récup active</text><text x="540" y="680" font-family="Arial, sans-serif" font-size="14" fill="#60A5FA" text-anchor="middle">Aucun exercice prévu</text>' : '<text x="540" y="650" font-family="Arial, sans-serif" font-size="16" fill="#9CA3AF" text-anchor="middle">Aucun exercice planifié — va dans Plan</text>')}
 
   <!-- Footer -->
   <rect x="40" y="1220" width="1000" height="90" rx="16" fill="#F9FAFB" stroke="#E5E7EB" stroke-dasharray="8 6"/>
