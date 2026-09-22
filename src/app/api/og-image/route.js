@@ -15,11 +15,14 @@ export async function GET(request) {
   if (!data) {
     data = {
       plans: {
-        LUNDI: [{ id: 1, exercise: 'Pompes', instruction: '3x12' }, { id: 2, exercise: 'Squats', instruction: '' }],
-        MARDI: [{ id: 1, exercise: 'Tractions', instruction: '' }],
+        LUNDI: [
+          { id: '1', exercise: 'Dips lestés', instruction: '3 min pause', series: 4, repMin: 8, repMax: 12, weight: 5, method: 'poids' },
+          { id: '2', exercise: 'Pompes Déclinées', instruction: '', series: 3, repMin: 10, repMax: 12, weight: 0, method: 'reps' },
+        ],
+        MARDI: [{ id: '1', exercise: 'Squats sac lesté', instruction: '', series: 4, repMin: 12, repMax: 15, weight: 10, method: 'poids' }],
         MERCREDI: [], JEUDI: [], VENDREDI: [], SAMEDI: [], DIMANCHE: []
       },
-      todayReps: { LUNDI: { 1: '42', 2: '30' }, MARDI: { 1: '15' } },
+      todayReps: { LUNDI: { '1': ['10','10','9','8'], '2': ['11','11','10'] }, MARDI: { '1': ['12','12','12','12'] } },
       history: {},
     }
   }

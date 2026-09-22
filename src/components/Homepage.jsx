@@ -21,15 +21,34 @@ const getTodayName = () => {
 
 const initialPlans = {
   LUNDI: [
-    { id: 1, exercise: '', instruction: '' },
-    { id: 2, exercise: '', instruction: '' },
+    { id: 'lundi-1', exercise: 'Dips lestés (sac de sable)', instruction: '3 min pause', series: 4, repMin: 8, repMax: 12, weight: 5, method: 'poids' },
+    { id: 'lundi-2', exercise: 'Tractions australiennes', instruction: 'Tempo négatif 4s', series: 4, repMin: 8, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'lundi-3', exercise: 'Pompes Déclinées', instruction: 'Haut pectoraux', series: 3, repMin: 10, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'lundi-4', exercise: 'Oiseau / Rear Delt Fly', instruction: 'Bouteilles', series: 3, repMin: 15, repMax: 15, weight: 3, method: 'reps' },
+    { id: 'lundi-5', exercise: 'Enroulements de bassin', instruction: 'Abdos dynamiques', series: 3, repMin: 12, repMax: 20, weight: 0, method: 'reps' },
   ],
-  MARDI: [{ id: 1, exercise: '', instruction: '' }],
-  MERCREDI: [{ id: 1, exercise: '', instruction: '' }],
-  JEUDI: [{ id: 1, exercise: '', instruction: '' }],
-  VENDREDI: [{ id: 1, exercise: '', instruction: '' }],
-  SAMEDI: [{ id: 1, exercise: '', instruction: '' }],
-  DIMANCHE: [{ id: 1, exercise: '', instruction: '' }],
+  MARDI: [
+    { id: 'mardi-1', exercise: 'Fentes Bulgares', instruction: 'Pied arrière chaise', series: 3, repMin: 10, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'mardi-2', exercise: 'Squats sac lesté', instruction: '12-15 reps', series: 4, repMin: 12, repMax: 15, weight: 10, method: 'poids' },
+    { id: 'mardi-3', exercise: 'Élévations Mollets Debout', instruction: 'Pause 2s sommet', series: 4, repMin: 20, repMax: 20, weight: 0, method: 'reps' },
+    { id: 'mardi-4', exercise: 'Gainage Planche Dynamique', instruction: '45-60s', series: 3, repMin: 45, repMax: 60, weight: 0, method: 'reps' },
+  ],
+  MERCREDI: [],
+  JEUDI: [
+    { id: 'jeudi-1', exercise: 'Dips lestés (sac de sable)', instruction: '3 min pause', series: 4, repMin: 8, repMax: 12, weight: 5, method: 'poids' },
+    { id: 'jeudi-2', exercise: 'Tractions australiennes', instruction: 'Tempo négatif 4s', series: 4, repMin: 8, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'jeudi-3', exercise: 'Pompes Déclinées', instruction: 'Haut pectoraux', series: 3, repMin: 10, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'jeudi-4', exercise: 'Oiseau / Rear Delt Fly', instruction: 'Bouteilles', series: 3, repMin: 15, repMax: 15, weight: 3, method: 'reps' },
+    { id: 'jeudi-5', exercise: 'Enroulements de bassin', instruction: 'Abdos dynamiques', series: 3, repMin: 12, repMax: 20, weight: 0, method: 'reps' },
+  ],
+  VENDREDI: [
+    { id: 'vendredi-1', exercise: 'Fentes Bulgares', instruction: 'Pied arrière chaise', series: 3, repMin: 10, repMax: 12, weight: 0, method: 'reps' },
+    { id: 'vendredi-2', exercise: 'Squats sac lesté', instruction: '12-15 reps', series: 4, repMin: 12, repMax: 15, weight: 10, method: 'poids' },
+    { id: 'vendredi-3', exercise: 'Élévations Mollets Debout', instruction: 'Pause 2s sommet', series: 4, repMin: 20, repMax: 20, weight: 0, method: 'reps' },
+    { id: 'vendredi-4', exercise: 'Gainage Planche Dynamique', instruction: '45-60s', series: 3, repMin: 45, repMax: 60, weight: 0, method: 'reps' },
+  ],
+  SAMEDI: [],
+  DIMANCHE: [],
 }
 
 const Homepage = () => {
@@ -46,6 +65,29 @@ const Homepage = () => {
   const [restored, setRestored] = useState(false)
   const hasEditedRef = useRef(false)
   const setPlansTracked = useCallback((updater) => { hasEditedRef.current = true; setPlans(updater) }, [setPlans])
+
+  // Migration v1 -> v2: ajoute series/repMin/repMax/weight/method si manquant (Upper/Lower 50kg par défaut)
+  useEffect(() => {
+    const needs = Object.values(plans).some(list => Array.isArray(list) && list.some(it => it.series == null))
+    if (!needs) return
+    const migrated = {}
+    for (const day of Object.keys(initialPlans)) {
+      const list = plans[day] || []
+      migrated[day] = list.map(it => ({
+        id: String(it.id),
+        exercise: it.exercise ?? '',
+        instruction: it.instruction ?? '',
+        series: it.series ?? (it.exercise ? 3 : 3),
+        repMin: it.repMin ?? 8,
+        repMax: it.repMax ?? 12,
+        weight: it.weight ?? 0,
+        method: it.method ?? 'reps',
+      }))
+    }
+    // garde jours non prévus mais présents dans plans
+    for (const day of Object.keys(plans)) if (!migrated[day]) migrated[day] = plans[day]
+    setPlans(migrated)
+  }, []) // run once
 
   // Restauration au montage depuis l'API — local-wins si édité avant fetch
   useEffect(() => {
@@ -202,7 +244,7 @@ const Homepage = () => {
           ) : (
             <>
               {activeTab === 'Home' && (
-                <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} />
+                <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} setPlans={setPlansTracked} />
               )}
               {activeTab === 'Stats' && (
                 <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />

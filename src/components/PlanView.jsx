@@ -15,7 +15,7 @@ const PlanView = ({ today, plans, setPlans }) => {
   const addExercise = (day) => {
     setPlans((prev) => ({
       ...prev,
-      [day]: [...prev[day], { id: crypto.randomUUID(), exercise: '', instruction: '' }],
+      [day]: [...prev[day], { id: crypto.randomUUID(), exercise: '', instruction: '', series: 3, repMin: 8, repMax: 12, weight: 0, method: 'reps' }],
     }))
   }
 
@@ -47,12 +47,12 @@ const PlanView = ({ today, plans, setPlans }) => {
                   </span>
                 )}
               </div>
-              <span className="text-[11px] sm:text-xs font-semibold text-gray-400 shrink-0">instructions</span>
+              <span className="text-[11px] sm:text-xs font-semibold text-gray-400 shrink-0">instructions · séries</span>
             </div>
 
-            <div className="space-y-2 sm:space-y-3">
+            <div className="space-y-3">
               {plans[day]?.map((item) => (
-                <div key={item.id} className="grid grid-cols-1 gap-2 sm:gap-3">
+                <div key={item.id} className="grid grid-cols-1 gap-2">
                   <div className="flex gap-2 items-center">
                     <input
                       type="text"
@@ -69,13 +69,31 @@ const PlanView = ({ today, plans, setPlans }) => {
                       ✕
                     </button>
                   </div>
-                  <input
-                    type="text"
-                    placeholder="instructions"
-                    value={item.instruction}
-                    onChange={(e) => updateField(day, item.id, 'instruction', e.target.value)}
-                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent min-h-[44px]"
-                  />
+                  <div className="grid grid-cols-[1fr_90px] gap-2">
+                    <input
+                      type="text"
+                      placeholder="instructions (ex: 3 min pause)"
+                      value={item.instruction}
+                      onChange={(e) => updateField(day, item.id, 'instruction', e.target.value)}
+                      className="w-full px-3 sm:px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#9747FF] focus:border-transparent min-h-[44px]"
+                    />
+                    <select
+                      value={item.series ?? 3}
+                      onChange={(e) => updateField(day, item.id, 'series', Number(e.target.value))}
+                      className="w-full px-2 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px] text-center"
+                    >
+                      <option value={3}>3 séries</option>
+                      <option value={4}>4 séries</option>
+                    </select>
+                  </div>
+                  <div className="grid grid-cols-3 gap-2">
+                    <input type="text" inputMode="numeric" placeholder="min (8)" value={item.repMin ?? ''} onChange={(e) => { const v=e.target.value; if(v!=='' && !/^\d{0,2}$/.test(v)) return; updateField(day, item.id, 'repMin', v===''? '': Number(v))}} className="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-center focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[40px]" />
+                    <input type="text" inputMode="numeric" placeholder="max (12)" value={item.repMax ?? ''} onChange={(e) => { const v=e.target.value; if(v!=='' && !/^\d{0,2}$/.test(v)) return; updateField(day, item.id, 'repMax', v===''? '': Number(v))}} className="w-full px-2 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm font-medium text-center focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[40px]" />
+                    <select value={item.method ?? 'reps'} onChange={(e) => updateField(day, item.id, 'method', e.target.value)} className="w-full px-2 py-2 bg-white border border-gray-200 rounded-lg text-xs font-bold text-center focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[40px]">
+                      <option value="reps">+ reps</option>
+                      <option value="poids">+ poids</option>
+                    </select>
+                  </div>
                 </div>
               ))}
             </div>

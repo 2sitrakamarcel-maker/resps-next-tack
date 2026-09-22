@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { DAYS_ORDER, calcDayStats, calcGlobalStats } from '../utils/stats'
 
 const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport, syncStatus }) => {
+  const [showParJour, setShowParJour] = useState(true)
   const global = useMemo(() => calcGlobalStats(plans, todayReps, history), [plans, todayReps, history])
 
   const dayStatsMap = useMemo(() => {
@@ -65,8 +66,11 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         </div>
       </div>
 
-      {/* Par jour */}
-      <div className="rounded-xl border border-gray-200 overflow-hidden">
+      {/* Par jour + toggle */}
+      <button onClick={() => setShowParJour(v=>!v)} className={`self-start text-[11px] font-black px-3 py-1.5 rounded-full border ${showParJour ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
+        {showParJour ? 'Par jour : ON' : 'Par jour : OFF — aujourd’hui seul'}
+      </button>
+      {showParJour && <div className="rounded-xl border border-gray-200 overflow-hidden">
         <div className="bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200 flex justify-between items-center">
           <span className="text-xs sm:text-sm font-black text-gray-700 uppercase">Par jour</span>
           <span className="text-[11px] text-gray-400">vs last week</span>
@@ -95,8 +99,7 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
             )
           })}
         </div>
-      </div>
-
+      </div>}
       {/* Détail exercices du jour sélectionné */}
       <div className="rounded-xl border border-gray-200 overflow-hidden">
         <div className="bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200">
