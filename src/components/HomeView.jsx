@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from 'react'
+import { Dumbbell } from 'lucide-react'
 import { parseSeries, sumSeries, getLastSeriesFor, getTargetFor } from '../utils/progression'
 import { getPct } from '../utils/stats'
 
@@ -94,8 +95,12 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
                   {item.instruction && <span className="text-xs text-gray-400 block truncate">{item.instruction} · {item.repMin}-{item.repMax} reps · {item.method==='poids' ? 'poids' : 'reps'}</span>}
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <input type="text" inputMode="numeric" placeholder="kg" value={item.weight ?? 0} onChange={(e)=> updateWeight(item.id, e.target.value)}
-                    className="w-20 text-center py-2 bg-gray-50 border-0 rounded-lg font-bold text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
+                  <div className="relative">
+                    <Dumbbell size={14} className="absolute left-2 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true" />
+                    <input type="text" inputMode="numeric" placeholder="" value={item.weight ?? 0} onChange={(e)=> updateWeight(item.id, e.target.value)}
+                      className="w-20 text-center py-2 pl-7 bg-gray-50 border-0 rounded-lg font-bold text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px] placeholder:text-gray-400" />
+                    {!String(item.weight ?? 0) && <Dumbbell size={14} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" aria-hidden="true" />}
+                  </div>
                   <span className={`px-3 py-1.5 rounded-full text-xs font-black shrink-0 bg-gradient-to-r from-[#9747FF] to-[#FF47A3] text-white shadow-sm ${target.overload ? '!from-green-500 !to-emerald-600' : ''}`}>
                     {target.display}
                   </span>
