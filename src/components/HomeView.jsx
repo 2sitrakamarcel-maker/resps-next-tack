@@ -16,7 +16,7 @@ function SeriesInput({ value, onCommit }) {
   }
   return (
     <input type="text" inputMode="numeric" pattern="[0-9]*" placeholder="-" value={draft} onChange={handle}
-      className="w-full text-center py-2.5 bg-white border border-gray-300 rounded-lg font-bold text-gray-800 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
+      className="w-full text-center py-2.5 bg-gray-50 border-0 rounded-lg font-bold text-gray-800 text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
   )
 }
 
@@ -54,7 +54,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
 
   if (dayPlans.length === 0) {
     return (
-      <div className="bg-blue-50 rounded-xl sm:rounded-2xl border-2 border-blue-200 p-6 sm:p-8 w-full max-w-4xl mx-auto my-2 sm:my-4 text-center">
+      <div className="bg-blue-50 rounded-xl sm:rounded-2xl p-6 sm:p-8 w-full max-w-4xl mx-auto my-2 sm:my-4 text-center">
         <p className="font-black text-blue-700 text-sm sm:text-base">💤 Jour de Repos — {selectedDay.toLowerCase()}</p>
         <p className="text-xs sm:text-sm text-blue-500 mt-1">Aucun exercice prévu. Récupération active.</p>
       </div>
@@ -62,8 +62,8 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
   }
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4">
-      <div className="flex items-center justify-between gap-2 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-gray-100">
+    <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4">
+      <div className="flex items-center justify-between gap-2 mb-4 sm:mb-6 pb-3 sm:pb-4">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <span className="text-[#9747FF] text-base sm:text-xl shrink-0">★</span>
           <h2 className="text-base sm:text-xl font-black text-gray-800 lowercase truncate">{selectedDay}</h2>
@@ -87,7 +87,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
           const isRegress = pct !== null && pct < 0
           const curFilled = curArr.some(s => s !== '')
           return (
-              <div key={item.id} className="flex flex-col gap-3 py-3 px-3 sm:px-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-[#FF47A3]/40 transition-colors duration-200">
+              <div key={item.id} className="flex flex-col gap-3 py-3 px-3 sm:px-4 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <span className="font-bold text-gray-800 text-sm sm:text-base block truncate">{item.exercise}</span>
@@ -95,7 +95,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <input type="text" inputMode="numeric" placeholder="kg" value={item.weight ?? 0} onChange={(e)=> updateWeight(item.id, e.target.value)}
-                    className="w-20 text-center py-2 bg-white border border-gray-300 rounded-lg font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
+                    className="w-20 text-center py-2 bg-gray-50 border-0 rounded-lg font-bold text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
                   <span className={`px-3 py-1.5 rounded-full text-xs font-black shrink-0 bg-gradient-to-r from-[#9747FF] to-[#FF47A3] text-white shadow-sm ${target.overload ? '!from-green-500 !to-emerald-600' : ''}`}>
                     {target.display}
                   </span>

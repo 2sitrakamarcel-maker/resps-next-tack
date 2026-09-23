@@ -32,8 +32,8 @@ const StatsView = ({ plans, todayReps, history, selectedDay }) => {
   }
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4 flex flex-col gap-4">
-      <div className="flex items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-gray-100">
+    <div className="bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4 flex flex-col gap-4">
+      <div className="flex items-center justify-between gap-2 pb-3 sm:pb-4">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <span className="text-purple-600 text-base sm:text-xl shrink-0">📊</span>
           <h2 className="text-sm sm:text-xl font-bold text-gray-800 uppercase truncate">Statistiques</h2>
@@ -45,14 +45,14 @@ const StatsView = ({ plans, todayReps, history, selectedDay }) => {
 
       {/* 2 cartes surcharge — Vibrant */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl border border-[#9747FF]/15 text-center shadow-sm">
+        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl text-center">
           <span className="text-[11px] sm:text-xs text-[#0F172A]/60 font-semibold block font-condensed tracking-wide">SURCHARGE MOY.</span>
           <span className={`text-2xl sm:text-3xl font-black mt-1 block font-condensed ${pctColor(global.globalPctAvg)}`}>
             {global.globalPctAvg !== null ? `${global.globalPctAvg > 0 ? '+' : ''}${global.globalPctAvg.toFixed(1)}%` : '-'}
           </span>
           <span className="text-[11px] text-[#0F172A]/40">moy. tous exos ({global.pctCount})</span>
         </div>
-        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl border border-[#9747FF]/15 text-center shadow-sm">
+        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl text-center">
           <span className="text-[11px] sm:text-xs text-[#0F172A]/60 font-semibold block font-condensed tracking-wide">SURCHARGE — {selectedDay}</span>
           <span className={`text-2xl sm:text-3xl font-black mt-1 block font-condensed ${pctColor(currentDay.dayPct)}`}>
             {currentDay.dayPct !== null ? `${currentDay.dayPct > 0 ? '+' : ''}${currentDay.dayPct.toFixed(1)}%` : '-'}
@@ -65,8 +65,8 @@ const StatsView = ({ plans, todayReps, history, selectedDay }) => {
       <button onClick={() => setShowParJour(v=>!v)} className={`self-start text-[11px] font-black px-3 py-1.5 rounded-full border ${showParJour ? 'bg-purple-100 text-purple-700 border-purple-200' : 'bg-gray-100 text-gray-500 border-gray-200'}`}>
         {showParJour ? 'Par jour : ON' : 'Par jour : OFF — aujourd’hui seul'}
       </button>
-      {showParJour && <div className="rounded-xl border border-gray-200 overflow-hidden">
-        <div className="bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200 flex justify-between items-center">
+      {showParJour && <div className="rounded-xl overflow-hidden">
+        <div className="bg-gray-50 px-3 sm:px-4 py-2 flex justify-between items-center">
           <span className="text-xs sm:text-sm font-black text-gray-700 uppercase">Par jour</span>
           <span className="text-[11px] text-gray-400">vs last week</span>
         </div>
@@ -96,8 +96,8 @@ const StatsView = ({ plans, todayReps, history, selectedDay }) => {
         </div>
       </div>}
       {/* Détail exercices du jour sélectionné */}
-      <div className="rounded-xl border border-gray-200 overflow-hidden">
-        <div className="bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200">
+      <div className="rounded-xl overflow-hidden">
+        <div className="bg-gray-50 px-3 sm:px-4 py-2">
           <span className="text-xs sm:text-sm font-black text-gray-700 uppercase">Détail — {selectedDay}</span>
         </div>
         {currentDay.total === 0 ? (

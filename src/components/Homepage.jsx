@@ -220,9 +220,9 @@ const Homepage = () => {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-br from-[#9747FF] via-[#FF47A3]/15 to-white p-4 sm:p-4 md:p-8 flex flex-col items-center">
-      <div className="w-full sm:max-w-5xl mx-auto border-0 sm:border-4 border-transparent bg-gradient-to-br from-[#9747FF] to-[#FF47A3] p-[2px] sm:p-[3px] rounded-none sm:rounded-[36px] shadow-none sm:shadow-2xl flex flex-col min-h-[calc(100dvh-32px)] sm:min-h-[85vh]">
-        <div className="flex-1 bg-white rounded-none sm:rounded-[32px] overflow-hidden flex flex-col min-h-0">
+    <div className="min-h-[100dvh] w-full h-full bg-white p-0 m-0 flex flex-col items-stretch">
+      <div className="w-full flex-1 flex flex-col min-h-0 bg-white border-0 rounded-none shadow-none p-0 max-w-none mx-0">
+        <div className="flex-1 bg-white rounded-none overflow-hidden flex flex-col min-h-0">
         <header className="w-full bg-gradient-to-r from-[#9747FF] to-[#FF47A3] sticky top-0 z-20" suppressHydrationWarning>
           <Navbar activeTab={activeTab} onSelectTab={setActiveTab} selectedDay={today || 'LUNDI'} />
         </header>
@@ -261,8 +261,8 @@ const Homepage = () => {
         </div>
       </div>
 
-      <footer className="w-full max-w-5xl mx-auto text-center px-4 py-6 mt-auto">
-        <p className="font-condensed text-sm sm:text-base font-black tracking-[0.2em] text-white uppercase drop-shadow">stay hard</p>
+      <footer className="w-full text-center px-4 py-6 mt-auto bg-white">
+        <p className="font-condensed text-sm sm:text-base font-black tracking-[0.2em] text-[#0F172A] uppercase">stay hard</p>
       </footer>
     </div>
   )

@@ -60,7 +60,7 @@ const Navbar = ({ activeTab, onSelectTab, selectedDay }) => {
           </button>
           {open && (
             <div id="nav-stats-plan-menu" role="menu" aria-labelledby="nav-dropdown-trigger"
-              className="absolute right-0 top-full mt-2 w-52 max-w-[calc(100vw-16px)] bg-white rounded-2xl shadow-xl border border-gray-100 py-1.5 z-50 overflow-hidden">
+              className="absolute right-0 top-full mt-2 w-52 max-w-[calc(100vw-16px)] bg-white rounded-2xl shadow-xl py-1.5 z-50 overflow-hidden">
               <button id="menu-stats" role="menuitem" tabIndex={0}
                 onClick={() => { onSelectTab('Stats'); setOpen(false) }}
                 className={`w-full text-left px-4 py-3 flex items-center gap-3 text-sm font-bold hover:bg-[#9747FF]/8 focus:bg-[#9747FF]/12 focus:outline-none cursor-pointer ${activeTab === 'Stats' ? 'bg-[#9747FF]/10 text-[#9747FF]' : 'text-gray-700'}`}>
