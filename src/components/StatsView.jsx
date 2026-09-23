@@ -43,26 +43,21 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         </span>
       </div>
 
-      {/* Global 3 cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-        <div className="bg-purple-50/60 p-3 sm:p-4 rounded-xl border border-purple-100 text-center">
-          <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">VOLUME (REPS)</span>
-          <span className="text-xl sm:text-2xl font-black text-[#9747FF] mt-1 block">{global.totalReps}</span>
-          <span className="text-[11px] text-gray-400">total reps saisis</span>
-        </div>
-        <div className="bg-purple-50/60 p-3 sm:p-4 rounded-xl border border-purple-100 text-center">
-          <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">SEANCES</span>
-          <span className="text-xl sm:text-2xl font-black text-[#9747FF] mt-1 block">
-            {global.filled} / {global.totalPlanned}
-          </span>
-          <span className="text-[11px] text-gray-400">exos remplis</span>
-        </div>
-        <div className="bg-purple-50/60 p-3 sm:p-4 rounded-xl border border-purple-100 text-center">
+      {/* 2 cartes surcharge */}
+      <div className="grid grid-cols-2 gap-3 sm:gap-4">
+        <div className="bg-purple-50/60 p-4 sm:p-5 rounded-xl border border-purple-100 text-center">
           <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">SURCHARGE MOY.</span>
-          <span className={`text-xl sm:text-2xl font-black mt-1 block ${pctColor(global.globalPctAvg)}`}>
+          <span className={`text-2xl sm:text-3xl font-black mt-1 block ${pctColor(global.globalPctAvg)}`}>
             {global.globalPctAvg !== null ? `${global.globalPctAvg > 0 ? '+' : ''}${global.globalPctAvg.toFixed(1)}%` : '-'}
           </span>
-          <span className="text-[11px] text-gray-400">moy. par exo ({global.pctCount} exos)</span>
+          <span className="text-[11px] text-gray-400">moy. tous exos ({global.pctCount})</span>
+        </div>
+        <div className="bg-purple-50/60 p-4 sm:p-5 rounded-xl border border-purple-100 text-center">
+          <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">SURCHARGE — {selectedDay}</span>
+          <span className={`text-2xl sm:text-3xl font-black mt-1 block ${pctColor(currentDay.dayPct)}`}>
+            {currentDay.dayPct !== null ? `${currentDay.dayPct > 0 ? '+' : ''}${currentDay.dayPct.toFixed(1)}%` : '-'}
+          </span>
+          <span className="text-[11px] text-gray-400">{currentDay.filled}/{currentDay.total} exos aujourd&apos;hui</span>
         </div>
       </div>
 
