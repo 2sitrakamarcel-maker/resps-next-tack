@@ -62,7 +62,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
   }
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-3 sm:p-6 w-full max-w-4xl mx-auto my-1 sm:my-4">
+    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4">
       <div className="flex items-center justify-between gap-2 mb-4 sm:mb-6 pb-3 sm:pb-4 border-b border-gray-100">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <span className="text-[#9747FF] text-base sm:text-xl shrink-0">★</span>

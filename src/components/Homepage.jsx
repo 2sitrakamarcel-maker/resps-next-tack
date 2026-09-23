@@ -5,6 +5,7 @@ import Navbar from './Navbar'
 import HomeView from './HomeView'
 import StatsView from './StatsView'
 import PlanView from './PlanView'
+import ParamsView from './ParamsView'
 import { useLocalStorage } from '../hooks/useLocalStorage'
 import { getDeviceId } from '../lib/device'
 import { getISOWeekKey, getPreviousSunday } from '../utils/week'
@@ -219,8 +220,8 @@ const Homepage = () => {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-white to-purple-100 p-0 sm:p-4 md:p-8 flex flex-col items-center">
-      <div className="w-full sm:max-w-5xl border-0 sm:border-4 border-[#9747FF] rounded-none sm:rounded-[36px] overflow-hidden bg-white shadow-none sm:shadow-2xl flex flex-col min-h-[100dvh] sm:min-h-[85vh]">
+    <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-white to-purple-100 p-4 sm:p-4 md:p-8 flex flex-col items-center">
+      <div className="w-full sm:max-w-5xl mx-auto border-0 sm:border-4 border-[#9747FF] rounded-none sm:rounded-[36px] overflow-hidden bg-white shadow-none sm:shadow-2xl flex flex-col min-h-[calc(100dvh-32px)] sm:min-h-[85vh]">
         <header className="w-full bg-[#9747FF] sticky top-0 z-20" suppressHydrationWarning>
           <Navbar activeTab={activeTab} onSelectTab={setActiveTab} selectedDay={today || 'LUNDI'} />
         </header>
@@ -238,7 +239,7 @@ const Homepage = () => {
           </div>
         )}
 
-        <main className="flex-1 p-3 sm:p-6 flex flex-col overflow-auto">
+        <main className="flex-1 p-4 sm:p-6 flex flex-col overflow-auto min-h-0">
           {!today ? (
             <div className="flex-1 flex items-center justify-center p-8 text-gray-400">Chargement...</div>
           ) : (
@@ -247,34 +248,19 @@ const Homepage = () => {
                 <HomeView selectedDay={today} plans={plans} todayReps={todayReps} setTodayReps={setTodayReps} history={history} setPlans={setPlansTracked} />
               )}
               {activeTab === 'Stats' && (
-                <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} onExport={exportJson} onImport={importJson} syncStatus={syncStatus} />
+                <StatsView plans={plans} todayReps={todayReps} history={history} selectedDay={today} />
               )}
               {activeTab === 'Plan' && <PlanView today={today} plans={plans} setPlans={setPlansTracked} />}
+              {activeTab === 'Params' && (
+                <ParamsView onExport={exportJson} onImport={importJson} syncStatus={syncStatus} publishStatus={publishStatus} onPublish={publishNow} ogDeviceId={ogDeviceId} />
+              )}
             </>
           )}
-          <div className="mt-4 flex flex-col items-center gap-2">
-            <button
-              onClick={publishNow}
-              disabled={publishStatus.startsWith('loading')}
-              className="px-4 py-2 rounded-xl bg-[#9747FF] text-white font-black text-sm hover:bg-[#7C3AED] disabled:opacity-50 min-h-[44px]"
-            >
-              {publishStatus.startsWith('loading') ? 'Publication...' : 'Publier maintenant (test FB image)'}
-            </button>
-            {publishStatus !== 'idle' && <p className="text-[11px] text-gray-500">{publishStatus}</p>}
-            <a href={`/api/og-image?device_id=${ogDeviceId}`} target="_blank" rel="noreferrer" className="text-[11px] text-[#9747FF] underline">Aperçu image (og-image)</a>
-          </div>
         </main>
       </div>
 
-      <footer className="mt-3 sm:mt-6 text-center px-3 py-2">
-        <h2 className="text-sm sm:text-2xl font-black text-gray-800 tracking-wider uppercase">
-          &quot;OBJECTIF : SURCHARGE PROGRESSIVE&quot;
-        </h2>
-        {syncStatus === 'off' && (
-          <p className="text-[11px] text-gray-400 mt-1">Sync serveur désactivé — renseigne SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY dans .env.local</p>
-        )}
-        {syncStatus === 'saved' && <p className="text-[11px] text-green-600 mt-1">✓ Synchronisé avec le serveur</p>}
-        {syncStatus === 'error' && <p className="text-[11px] text-red-600 mt-1">Échec de la synchronisation au serveur</p>}
+      <footer className="w-full max-w-5xl mx-auto text-center px-4 py-6 mt-auto border-t border-purple-100/50 bg-white/80 backdrop-blur">
+        <p className="text-sm sm:text-base font-black tracking-[0.2em] text-gray-800 uppercase">stay hard</p>
       </footer>
     </div>
   )

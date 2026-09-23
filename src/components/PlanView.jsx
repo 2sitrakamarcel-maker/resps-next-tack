@@ -27,7 +27,7 @@ const PlanView = ({ today, plans, setPlans }) => {
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto my-1 sm:my-2 max-h-[calc(100dvh-160px)] sm:max-h-[60vh] overflow-y-auto pr-1 sm:pr-2 space-y-4 sm:space-y-6">
+    <div className="w-full max-w-4xl mx-auto my-2 sm:my-4 space-y-4 sm:space-y-6">
       {DAYS_ORDER.map((day) => {
         const isToday = day === today
         return (
@@ -50,9 +50,9 @@ const PlanView = ({ today, plans, setPlans }) => {
               <span className="text-[11px] sm:text-xs font-semibold text-gray-400 shrink-0">instructions · séries</span>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-4">
               {plans[day]?.map((item) => (
-                <div key={item.id} className="grid grid-cols-1 gap-2">
+                <div key={item.id} className="grid grid-cols-1 gap-2 p-3 bg-white border border-gray-100 rounded-xl shadow-sm">
                   <div className="flex gap-2 items-center">
                     <input
                       type="text"

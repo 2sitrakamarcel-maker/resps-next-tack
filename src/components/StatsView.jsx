@@ -32,7 +32,7 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
   }
 
   return (
-    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-3 sm:p-6 w-full max-w-4xl mx-auto my-1 sm:my-4 flex flex-col gap-4">
+    <div className="bg-white rounded-xl sm:rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-6 w-full max-w-4xl mx-auto my-2 sm:my-4 flex flex-col gap-4">
       <div className="flex items-center justify-between gap-2 pb-3 sm:pb-4 border-b border-gray-100">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
           <span className="text-purple-600 text-base sm:text-xl shrink-0">📊</span>
@@ -144,10 +144,7 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         )}
         {syncStatus === 'saved' && <p className="text-[11px] text-green-600 text-center">✓ Synchronisé avec le serveur (device_id sans auth)</p>}
         {syncStatus === 'error' && <p className="text-[11px] text-red-600 text-center">Échec de la synchronisation au serveur</p>}
-        <div className="text-center py-3 sm:py-4 bg-gray-50 rounded-xl border border-dashed border-gray-200 px-3">
-          <p className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide">&quot;OBJECTIF : SURCHARGE PROGRESSIVE&quot;</p>
-          <p className="text-[11px] sm:text-xs text-gray-400 mt-1">Consistez, progressez, répétez.</p>
-        </div>
+        <div className="hidden">{/* stay hard moved to footer */}</div>
       </div>
     </div>
   )

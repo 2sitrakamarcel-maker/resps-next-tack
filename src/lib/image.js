@@ -57,22 +57,17 @@ export function buildSvg(data, date = new Date()) {
   <text x="540" y="125" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="white" text-anchor="middle">${esc(dayName)}</text>
   <text x="540" y="165" font-family="Arial, sans-serif" font-size="18" fill="white" opacity="0.9" text-anchor="middle">${esc(date.toLocaleDateString('fr-FR', {weekday:'long', day:'numeric', month:'long', year:'numeric'}))}</text>
 
-  <!-- Global 3 cards -->
+   <!-- 2 cartes surcharge -->
   <g>
-    <rect x="40" y="250" width="320" height="150" rx="20" fill="#F5F3FF" stroke="#DDD6FE"/>
-    <text x="200" y="285" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="middle">VOLUME (REPS)</text>
-    <text x="200" y="330" font-family="Arial, sans-serif" font-size="52" font-weight="900" fill="#9747FF" text-anchor="middle">${global.totalReps}</text>
-    <text x="200" y="360" font-family="Arial, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">total reps saisis</text>
+    <rect x="140" y="250" width="380" height="150" rx="20" fill="#F5F3FF" stroke="#DDD6FE"/>
+    <text x="330" y="285" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="middle">SURCHARGE MOY.</text>
+    <text x="330" y="330" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="${pctColor}" text-anchor="middle">${pctStr}</text>
+    <text x="330" y="360" font-family="Arial, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">moy. tous exos (${global.pctCount})</text>
 
-    <rect x="380" y="250" width="320" height="150" rx="20" fill="#F5F3FF" stroke="#DDD6FE"/>
-    <text x="540" y="285" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="middle">SÉANCES</text>
-    <text x="540" y="330" font-family="Arial, sans-serif" font-size="52" font-weight="900" fill="#9747FF" text-anchor="middle">${global.filled}/${global.totalPlanned}</text>
-    <text x="540" y="360" font-family="Arial, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">exos remplis</text>
-
-    <rect x="720" y="250" width="320" height="150" rx="20" fill="#F5F3FF" stroke="#DDD6FE"/>
-    <text x="880" y="285" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="middle">SURCHARGE MOY.</text>
-    <text x="880" y="330" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="${pctColor}" text-anchor="middle">${pctStr}</text>
-    <text x="880" y="360" font-family="Arial, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">moy. par exo (${global.pctCount})</text>
+    <rect x="560" y="250" width="380" height="150" rx="20" fill="#F5F3FF" stroke="#DDD6FE"/>
+    <text x="750" y="285" font-family="Arial, sans-serif" font-size="13" font-weight="700" fill="#6B7280" text-anchor="middle">SURCHARGE — ${esc(dayName)}</text>
+    <text x="750" y="330" font-family="Arial, sans-serif" font-size="44" font-weight="900" fill="${dayPctStr==='-'?'#9CA3AF':(dayPctStr.includes('+')?'#059669':'#DC2626')}" text-anchor="middle">${dayPctStr}</text>
+    <text x="750" y="360" font-family="Arial, sans-serif" font-size="13" fill="#9CA3AF" text-anchor="middle">${dayStats.filled}/${dayStats.total} exos aujourd&apos;hui</text>
   </g>
 
   <!-- Day header -->
@@ -101,10 +96,10 @@ export function buildSvg(data, date = new Date()) {
   <!-- Per exo rows -->
   ${perExoRows || (dayStats.total === 0 ? '<text x="540" y="650" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#1E40AF" text-anchor="middle">💤 Jour de Repos — récup active</text><text x="540" y="680" font-family="Arial, sans-serif" font-size="14" fill="#60A5FA" text-anchor="middle">Aucun exercice prévu</text>' : '<text x="540" y="650" font-family="Arial, sans-serif" font-size="16" fill="#9CA3AF" text-anchor="middle">Aucun exercice planifié — va dans Plan</text>')}
 
-  <!-- Footer -->
+   <!-- Footer -->
   <rect x="40" y="1220" width="1000" height="90" rx="16" fill="#F9FAFB" stroke="#E5E7EB" stroke-dasharray="8 6"/>
-  <text x="540" y="1255" font-family="Arial, sans-serif" font-size="16" font-weight="900" fill="#111827" text-anchor="middle">OBJECTIF : SURCHARGE PROGRESSIVE</text>
-  <text x="540" y="1280" font-family="Arial, sans-serif" font-size="13" fill="#6B7280" text-anchor="middle">Consistez, progressez, répétez. • ${esc(date.toLocaleDateString('fr-FR'))}</text>
+  <text x="540" y="1255" font-family="Arial, sans-serif" font-size="16" font-weight="900" fill="#111827" text-anchor="middle">stay hard</text>
+  <text x="540" y="1280" font-family="Arial, sans-serif" font-size="13" fill="#6B7280" text-anchor="middle">${esc(date.toLocaleDateString('fr-FR'))}</text>
 </svg>`
 }
 
