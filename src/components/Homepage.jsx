@@ -220,9 +220,10 @@ const Homepage = () => {
   }
 
   return (
-    <div className="min-h-[100dvh] bg-gradient-to-br from-purple-50 via-white to-purple-100 p-4 sm:p-4 md:p-8 flex flex-col items-center">
-      <div className="w-full sm:max-w-5xl mx-auto border-0 sm:border-4 border-[#9747FF] rounded-none sm:rounded-[36px] overflow-hidden bg-white shadow-none sm:shadow-2xl flex flex-col min-h-[calc(100dvh-32px)] sm:min-h-[85vh]">
-        <header className="w-full bg-[#9747FF] sticky top-0 z-20" suppressHydrationWarning>
+    <div className="min-h-[100dvh] bg-gradient-to-br from-[#9747FF] via-[#FF47A3]/15 to-white p-4 sm:p-4 md:p-8 flex flex-col items-center">
+      <div className="w-full sm:max-w-5xl mx-auto border-0 sm:border-4 border-transparent bg-gradient-to-br from-[#9747FF] to-[#FF47A3] p-[2px] sm:p-[3px] rounded-none sm:rounded-[36px] shadow-none sm:shadow-2xl flex flex-col min-h-[calc(100dvh-32px)] sm:min-h-[85vh]">
+        <div className="flex-1 bg-white rounded-none sm:rounded-[32px] overflow-hidden flex flex-col min-h-0">
+        <header className="w-full bg-gradient-to-r from-[#9747FF] to-[#FF47A3] sticky top-0 z-20" suppressHydrationWarning>
           <Navbar activeTab={activeTab} onSelectTab={setActiveTab} selectedDay={today || 'LUNDI'} />
         </header>
 
@@ -257,10 +258,11 @@ const Homepage = () => {
             </>
           )}
         </main>
+        </div>
       </div>
 
-      <footer className="w-full max-w-5xl mx-auto text-center px-4 py-6 mt-auto border-t border-purple-100/50 bg-white/80 backdrop-blur">
-        <p className="text-sm sm:text-base font-black tracking-[0.2em] text-gray-800 uppercase">stay hard</p>
+      <footer className="w-full max-w-5xl mx-auto text-center px-4 py-6 mt-auto">
+        <p className="font-condensed text-sm sm:text-base font-black tracking-[0.2em] text-white uppercase drop-shadow">stay hard</p>
       </footer>
     </div>
   )

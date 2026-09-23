@@ -1,8 +1,14 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Barlow:wght@400;500;600;700;800&display=swap');
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0F172A;
+  --volt: #9747FF;
+  --volt-2: #FF47A3;
+  --ink: #0F172A;
+  --signal: #22C55E;
+  --paper: #F8FAFC;
 }
 
 @theme inline {
@@ -23,7 +29,11 @@ html,
 body {
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Barlow", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+h1,h2,h3,.font-condensed {
+  font-family: "Barlow Condensed", "Barlow", sans-serif;
+  letter-spacing: -0.02em;
 }
 
 body {

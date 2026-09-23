@@ -33,8 +33,8 @@ const PlanView = ({ today, plans, setPlans }) => {
         return (
           <div
             key={day}
-            className={`rounded-xl sm:rounded-2xl border-2 p-3 sm:p-5 space-y-3 sm:space-y-4 transition-all ${
-              isToday ? 'border-[#9747FF] bg-purple-50/40 shadow-md' : 'border-gray-200 bg-white shadow-sm'
+            className={`rounded-xl sm:rounded-2xl border-2 p-3 sm:p-5 space-y-3 sm:space-y-4 transition-all cursor-pointer hover:shadow-md ${
+              isToday ? 'border-transparent bg-gradient-to-br from-[#9747FF]/15 to-[#FF47A3]/10 shadow-md' : 'border-gray-200 bg-white shadow-sm hover:border-[#FF47A3]/30'
             }`}
           >
             <div className="flex items-center justify-between gap-2">
@@ -98,9 +98,9 @@ const PlanView = ({ today, plans, setPlans }) => {
               ))}
             </div>
 
-            <button
+              <button
               onClick={() => addExercise(day)}
-              className="w-full py-3 rounded-xl border-2 border-dashed border-gray-200 text-sm font-bold text-gray-500 hover:border-[#9747FF] hover:text-[#9747FF] hover:bg-purple-50/50 active:scale-[0.99] transition-all min-h-[44px]"
+              className="w-full py-3 rounded-xl border-2 border-dashed border-gray-200 text-sm font-bold text-gray-500 hover:border-[#FF47A3] hover:text-[#FF47A3] hover:bg-gradient-to-r hover:from-[#9747FF]/5 hover:to-[#FF47A3]/5 active:scale-[0.99] transition-all duration-200 min-h-[44px] cursor-pointer"
             >
               + Ajouter un exercice
             </button>

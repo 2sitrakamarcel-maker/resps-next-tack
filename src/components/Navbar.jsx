@@ -7,7 +7,7 @@ const Navbar = ({ activeTab, onSelectTab, selectedDay }) => {
 
   return (
     <nav className="w-full px-4 sm:px-6 py-3 flex items-center justify-between gap-2 sm:gap-4">
-      <div className="bg-white text-[#9747FF] rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2 font-black text-xs sm:text-sm shadow-md shrink-0">
+      <div className="bg-white text-[#9747FF] rounded-full px-4 sm:px-5 py-1.5 sm:py-2 flex items-center gap-1.5 sm:gap-2 font-black text-xs sm:text-sm shadow-md shrink-0 font-condensed">
         <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green-500 animate-pulse shrink-0" />
         <span className="whitespace-nowrap">DAY : {selectedDay}</span>
       </div>

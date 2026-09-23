@@ -87,7 +87,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
           const isRegress = pct !== null && pct < 0
           const curFilled = curArr.some(s => s !== '')
           return (
-            <div key={item.id} className="flex flex-col gap-3 py-3 px-3 sm:px-4 bg-gray-50/50 rounded-xl border border-gray-100">
+              <div key={item.id} className="flex flex-col gap-3 py-3 px-3 sm:px-4 bg-white border border-gray-200 rounded-xl shadow-sm hover:border-[#FF47A3]/40 transition-colors duration-200">
               <div className="flex items-center justify-between gap-2">
                 <div className="min-w-0">
                   <span className="font-bold text-gray-800 text-sm sm:text-base block truncate">{item.exercise}</span>
@@ -96,7 +96,7 @@ const HomeView = ({ selectedDay, plans, todayReps, setTodayReps, history, setPla
                 <div className="flex items-center gap-2 shrink-0">
                   <input type="text" inputMode="numeric" placeholder="kg" value={item.weight ?? 0} onChange={(e)=> updateWeight(item.id, e.target.value)}
                     className="w-20 text-center py-2 bg-white border border-gray-300 rounded-lg font-bold text-sm focus:outline-none focus:ring-2 focus:ring-[#9747FF] min-h-[44px]" />
-                  <span className={`px-3 py-1.5 rounded-full text-xs font-black shrink-0 ${target.overload ? 'bg-green-100 text-green-700' : 'bg-[#9747FF] text-white'}`}>
+                  <span className={`px-3 py-1.5 rounded-full text-xs font-black shrink-0 bg-gradient-to-r from-[#9747FF] to-[#FF47A3] text-white shadow-sm ${target.overload ? '!from-green-500 !to-emerald-600' : ''}`}>
                     {target.display}
                   </span>
                 </div>

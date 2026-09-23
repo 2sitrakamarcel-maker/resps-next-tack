@@ -3,7 +3,7 @@
 import React, { useMemo, useState } from 'react'
 import { DAYS_ORDER, calcDayStats, calcGlobalStats } from '../utils/stats'
 
-const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport, syncStatus }) => {
+const StatsView = ({ plans, todayReps, history, selectedDay }) => {
   const [showParJour, setShowParJour] = useState(true)
   const global = useMemo(() => calcGlobalStats(plans, todayReps, history), [plans, todayReps, history])
 
@@ -43,21 +43,21 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         </span>
       </div>
 
-      {/* 2 cartes surcharge */}
+      {/* 2 cartes surcharge — Vibrant */}
       <div className="grid grid-cols-2 gap-3 sm:gap-4">
-        <div className="bg-purple-50/60 p-4 sm:p-5 rounded-xl border border-purple-100 text-center">
-          <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">SURCHARGE MOY.</span>
-          <span className={`text-2xl sm:text-3xl font-black mt-1 block ${pctColor(global.globalPctAvg)}`}>
+        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl border border-[#9747FF]/15 text-center shadow-sm">
+          <span className="text-[11px] sm:text-xs text-[#0F172A]/60 font-semibold block font-condensed tracking-wide">SURCHARGE MOY.</span>
+          <span className={`text-2xl sm:text-3xl font-black mt-1 block font-condensed ${pctColor(global.globalPctAvg)}`}>
             {global.globalPctAvg !== null ? `${global.globalPctAvg > 0 ? '+' : ''}${global.globalPctAvg.toFixed(1)}%` : '-'}
           </span>
-          <span className="text-[11px] text-gray-400">moy. tous exos ({global.pctCount})</span>
+          <span className="text-[11px] text-[#0F172A]/40">moy. tous exos ({global.pctCount})</span>
         </div>
-        <div className="bg-purple-50/60 p-4 sm:p-5 rounded-xl border border-purple-100 text-center">
-          <span className="text-[11px] sm:text-xs text-gray-500 font-semibold block">SURCHARGE — {selectedDay}</span>
-          <span className={`text-2xl sm:text-3xl font-black mt-1 block ${pctColor(currentDay.dayPct)}`}>
+        <div className="bg-gradient-to-br from-[#9747FF]/12 to-[#FF47A3]/10 p-4 sm:p-5 rounded-xl border border-[#9747FF]/15 text-center shadow-sm">
+          <span className="text-[11px] sm:text-xs text-[#0F172A]/60 font-semibold block font-condensed tracking-wide">SURCHARGE — {selectedDay}</span>
+          <span className={`text-2xl sm:text-3xl font-black mt-1 block font-condensed ${pctColor(currentDay.dayPct)}`}>
             {currentDay.dayPct !== null ? `${currentDay.dayPct > 0 ? '+' : ''}${currentDay.dayPct.toFixed(1)}%` : '-'}
           </span>
-          <span className="text-[11px] text-gray-400">{currentDay.filled}/{currentDay.total} exos aujourd&apos;hui</span>
+          <span className="text-[11px] text-[#0F172A]/40">{currentDay.filled}/{currentDay.total} exos aujourd&apos;hui</span>
         </div>
       </div>
 
@@ -126,26 +126,7 @@ const StatsView = ({ plans, todayReps, history, selectedDay, onExport, onImport,
         )}
       </div>
 
-      <div className="space-y-3">
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            onClick={onExport}
-            className="py-3 rounded-xl bg-white border border-gray-200 font-bold text-sm hover:bg-gray-50 min-h-[44px]"
-          >
-            Export JSON
-          </button>
-          <label className="py-3 rounded-xl bg-white border border-gray-200 font-bold text-sm hover:bg-gray-50 min-h-[44px] flex items-center justify-center cursor-pointer">
-            Import JSON
-            <input type="file" accept=".json" onChange={onImport} className="hidden" />
-          </label>
-        </div>
-        {syncStatus === 'off' && (
-          <p className="text-[11px] text-gray-400 text-center">Sync serveur désactivé — renseigne SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY pour exporter vers le serveur</p>
-        )}
-        {syncStatus === 'saved' && <p className="text-[11px] text-green-600 text-center">✓ Synchronisé avec le serveur (device_id sans auth)</p>}
-        {syncStatus === 'error' && <p className="text-[11px] text-red-600 text-center">Échec de la synchronisation au serveur</p>}
-        <div className="hidden">{/* stay hard moved to footer */}</div>
-      </div>
+      <div className="hidden">{/* export/import moved to Params */}</div>
     </div>
   )
 }
