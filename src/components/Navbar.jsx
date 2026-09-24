@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from 'react'
-import { BicepsFlexed, ChartNoAxesGantt, ChartNoAxesCombined, CalendarRange, EllipsisVertical, ChevronDown } from 'lucide-react'
+import { BicepsFlexed, ChartNoAxesGantt, ChartNoAxesCombined, CalendarRange, EllipsisVertical } from 'lucide-react'
 
 const Navbar = ({ activeTab, onSelectTab, selectedDay }) => {
   const [open, setOpen] = useState(false)
@@ -54,9 +54,8 @@ const Navbar = ({ activeTab, onSelectTab, selectedDay }) => {
           <button ref={triggerRef} aria-haspopup="menu" aria-expanded={open} aria-controls="nav-stats-plan-menu"
             onClick={() => setOpen(v => !v)}
             onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(v => !v) } }}
-            className={`w-11 h-11 sm:w-auto sm:px-5 py-2 rounded-full flex items-center justify-center gap-1.5 font-bold text-sm whitespace-nowrap shrink-0 min-h-[44px] sm:min-h-0 transition-all duration-200 cursor-pointer focus-visible:ring-2 ring-white ring-offset-2 ring-offset-[#9747FF] ${isGroupActive ? 'bg-white text-[#9747FF] shadow-md' : 'text-white hover:bg-white/10'}`}>
+            className={`w-11 h-11 sm:w-auto sm:px-5 py-2 rounded-full flex items-center justify-center font-bold text-sm whitespace-nowrap shrink-0 min-h-[44px] sm:min-h-0 transition-all duration-200 cursor-pointer focus-visible:ring-2 ring-white ring-offset-2 ring-offset-[#9747FF] ${isGroupActive ? 'bg-white text-[#9747FF] shadow-md' : 'text-white hover:bg-white/10'}`}>
             <ChartNoAxesGantt size={18} aria-hidden="true" />
-            <ChevronDown size={14} className={`transition-transform ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
           </button>
           {open && (
             <div id="nav-stats-plan-menu" role="menu" aria-labelledby="nav-dropdown-trigger"
