@@ -7,23 +7,40 @@ function getFontCss() {
   if (fontCssCache) return fontCssCache
   try {
     const base = path.join(process.cwd(), 'public', 'fonts')
-    const bcPath = path.join(base, 'BarlowCondensed-Black.ttf')
-    const bPath = path.join(base, 'Barlow-Bold.ttf')
-    const bc = fs.existsSync(bcPath) ? fs.readFileSync(bcPath).toString('base64') : null
-    const b = fs.existsSync(bPath) ? fs.readFileSync(bPath).toString('base64') : null
+    const bcSrc = path.join(base, 'BarlowCondensed-Black.ttf')
+    const bSrc = path.join(base, 'Barlow-Bold.ttf')
+    const tmp = '/tmp'
+    const bcTmp = path.join(tmp, 'BarlowCondensed-Black.ttf')
+    const bTmp = path.join(tmp, 'Barlow-Bold.ttf')
+    // copy to /tmp for Vercel Lambda file:// support (sharp/librsvg prefers file:// over data: on Lambda)
+    try { if (fs.existsSync(bcSrc) && !fs.existsSync(bcTmp)) fs.copyFileSync(bcSrc, bcTmp) } catch {}
+    try { if (fs.existsSync(bSrc) && !fs.existsSync(bTmp)) fs.copyFileSync(bSrc, bTmp) } catch {}
+    const bcPath = fs.existsSync(bcTmp) ? bcTmp : bcSrc
+    const bPath = fs.existsSync(bTmp) ? bTmp : bSrc
+    const bcExists = fs.existsSync(bcPath)
+    const bExists = fs.existsSync(bPath)
     let css = ''
-    if (bc) {
-      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:900;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:800;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:700;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:600;font-style:normal;}\n`
+    if (bcExists) {
+      const uri = `file://${bcPath.replace(/\\/g, '/')}`
+      css += `@font-face{font-family:'Barlow Condensed';src:url('${uri}') format('truetype');font-weight:900;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url('${uri}') format('truetype');font-weight:800;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url('${uri}') format('truetype');font-weight:700;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url('${uri}') format('truetype');font-weight:600;font-style:normal;}\n`
     }
-    if (b) {
-      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:900;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:800;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:700;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:600;font-style:normal;}\n`
-      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:400;font-style:normal;}\n`
+    if (bExists) {
+      const uri = `file://${bPath.replace(/\\/g, '/')}`
+      css += `@font-face{font-family:'Barlow';src:url('${uri}') format('truetype');font-weight:900;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url('${uri}') format('truetype');font-weight:800;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url('${uri}') format('truetype');font-weight:700;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url('${uri}') format('truetype');font-weight:600;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url('${uri}') format('truetype');font-weight:400;font-style:normal;}\n`
+    }
+    // fallback data: URI if file copy failed (local dev without /tmp)
+    if (!css) {
+      const bcB64 = bcExists ? fs.readFileSync(bcPath).toString('base64') : null
+      const bB64 = bExists ? fs.readFileSync(bPath).toString('base64') : null
+      if (bcB64) css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bcB64}) format('truetype');font-weight:900;font-style:normal;}\n`
+      if (bB64) css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${bB64}) format('truetype');font-weight:700;font-style:normal;}\n`
     }
     fontCssCache = css
     return css
