@@ -12,8 +12,19 @@ function getFontCss() {
     const bc = fs.existsSync(bcPath) ? fs.readFileSync(bcPath).toString('base64') : null
     const b = fs.existsSync(bPath) ? fs.readFileSync(bPath).toString('base64') : null
     let css = ''
-    if (bc) css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:900;font-style:normal;}\n`
-    if (b) css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:700;font-style:normal;}\n`
+    if (bc) {
+      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:900;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:800;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:700;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:600;font-style:normal;}\n`
+    }
+    if (b) {
+      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:900;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:800;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:700;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:600;font-style:normal;}\n`
+      css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:400;font-style:normal;}\n`
+    }
     fontCssCache = css
     return css
   } catch { return '' }
