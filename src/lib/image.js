@@ -1,4 +1,23 @@
 import { calcGlobalStats, DAYS_ORDER, calcDayStats } from '../utils/stats.js'
+import fs from 'node:fs'
+import path from 'node:path'
+
+let fontCssCache = null
+function getFontCss() {
+  if (fontCssCache) return fontCssCache
+  try {
+    const base = path.join(process.cwd(), 'node_modules', '@fontsource')
+    const bcPath = path.join(base, 'barlow-condensed', 'files', 'barlow-condensed-latin-900-normal.woff')
+    const bPath = path.join(base, 'barlow', 'files', 'barlow-latin-700-normal.woff')
+    const bc = fs.existsSync(bcPath) ? fs.readFileSync(bcPath).toString('base64') : null
+    const b = fs.existsSync(bPath) ? fs.readFileSync(bPath).toString('base64') : null
+    let css = ''
+    if (bc) css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/woff;base64,${bc}) format('woff');font-weight:900;font-style:normal;}\n`
+    if (b) css += `@font-face{font-family:'Barlow';src:url(data:font/woff;base64,${b}) format('woff');font-weight:700;font-style:normal;}\n`
+    fontCssCache = css
+    return css
+  } catch { return '' }
+}
 
 function esc(str) {
   return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
@@ -71,9 +90,11 @@ export function buildSvg(data, date = new Date()) {
     return rows || `<text x="812" y="440" font-family="Barlow, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">Aucun exo</text>`
   })()
 
+  const fontCss = getFontCss()
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg width="1080" height="810" viewBox="0 0 1080 810" xmlns="http://www.w3.org/2000/svg">
   <defs>
+    <style>${fontCss}</style>
     <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#9747FF"/>
       <stop offset="100%" stop-color="#FF47A3"/>
