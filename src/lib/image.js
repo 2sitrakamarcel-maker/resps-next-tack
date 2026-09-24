@@ -7,19 +7,13 @@ function getFontCss() {
   if (fontCssCache) return fontCssCache
   try {
     const base = path.join(process.cwd(), 'public', 'fonts')
-    const bcPath = path.join(base, 'BarlowCondensed-Black.woff')
-    const bPath = path.join(base, 'Barlow-Bold.woff')
+    const bcPath = path.join(base, 'BarlowCondensed-Black.ttf')
+    const bPath = path.join(base, 'Barlow-Bold.ttf')
     const bc = fs.existsSync(bcPath) ? fs.readFileSync(bcPath).toString('base64') : null
     const b = fs.existsSync(bPath) ? fs.readFileSync(bPath).toString('base64') : null
-    // fallback to node_modules if public not found (local dev without copy)
-    const fallbackBase = path.join(process.cwd(), 'node_modules', '@fontsource')
-    const bcFallback = !bc ? path.join(fallbackBase, 'barlow-condensed', 'files', 'barlow-condensed-latin-900-normal.woff') : null
-    const bFallback = !b ? path.join(fallbackBase, 'barlow', 'files', 'barlow-latin-700-normal.woff') : null
-    const bc2 = !bc && bcFallback && fs.existsSync(bcFallback) ? fs.readFileSync(bcFallback).toString('base64') : bc
-    const b2 = !b && bFallback && fs.existsSync(bFallback) ? fs.readFileSync(bFallback).toString('base64') : b
     let css = ''
-    if (bc2) css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/woff;base64,${bc2}) format('woff');font-weight:900;font-style:normal;}\n`
-    if (b2) css += `@font-face{font-family:'Barlow';src:url(data:font/woff;base64,${b2}) format('woff');font-weight:700;font-style:normal;}\n`
+    if (bc) css += `@font-face{font-family:'Barlow Condensed';src:url(data:font/truetype;base64,${bc}) format('truetype');font-weight:900;font-style:normal;}\n`
+    if (b) css += `@font-face{font-family:'Barlow';src:url(data:font/truetype;base64,${b}) format('truetype');font-weight:700;font-style:normal;}\n`
     fontCssCache = css
     return css
   } catch { return '' }
