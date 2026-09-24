@@ -1,10 +1,13 @@
 "use client";
 
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
+import { useLocalStorage } from '../hooks/useLocalStorage'
 import { DAYS_ORDER, calcDayStats, calcGlobalStats } from '../utils/stats'
 
+const STORAGE_SHOW_PAR_JOUR = 'reps-tracker:showParJour-v1'
+
 const StatsView = ({ plans, todayReps, history, selectedDay }) => {
-  const [showParJour, setShowParJour] = useState(true)
+  const [showParJour, setShowParJour] = useLocalStorage(STORAGE_SHOW_PAR_JOUR, false)
   const global = useMemo(() => calcGlobalStats(plans, todayReps, history), [plans, todayReps, history])
 
   const dayStatsMap = useMemo(() => {
