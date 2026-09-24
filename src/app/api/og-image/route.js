@@ -26,7 +26,7 @@ export async function GET(request) {
       history: {},
     }
   }
-  const svg = buildSvg(data, new Date())
+  const svg = await buildSvg(data, new Date())
   const buf = await generatePngBuffer(svg)
   const isPng = buf.slice(0, 4).toString('hex') === '89504e47' // PNG magic
   return new Response(buf, {

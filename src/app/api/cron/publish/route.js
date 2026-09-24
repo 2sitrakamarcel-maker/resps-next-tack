@@ -43,7 +43,7 @@ export async function GET(request) {
   }
 
   const caption = buildCaption(data, new Date())
-  const svg = buildSvg(data, new Date())
+  const svg = await buildSvg(data, new Date())
 
   // Anti-double-post: si force!=1, refuse si déjà posté aujourd'hui (même caption)
   const force = url.searchParams.get('force') === '1'

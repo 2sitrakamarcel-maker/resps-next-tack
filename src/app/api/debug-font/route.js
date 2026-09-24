@@ -19,6 +19,6 @@ export async function GET() {
   // try getFontCss
   let fontCssLen = 0
   let fontCssPreview = ''
-  try { const { buildSvg } = await import('../../../lib/image.js'); const svg = buildSvg({plans:{LUNDI:[{id:'1',exercise:'Test',instruction:'',series:4,repMin:8,repMax:12,weight:5,method:'poids'}]},todayReps:{LUNDI:{'1':['10','10','9','8']}},history:{}}, new Date()); fontCssLen = svg.length; fontCssPreview = svg.slice(0,1200) } catch(e){ fontCssPreview = String(e.message).slice(0,500) }
+  try { const { buildSvg } = await import('../../../lib/image.js'); const svg = await buildSvg({plans:{LUNDI:[{id:'1',exercise:'Test',instruction:'',series:4,repMin:8,repMax:12,weight:5,method:'poids'}]},todayReps:{LUNDI:{'1':['10','10','9','8']}},history:{}}, new Date()); fontCssLen = svg.length; fontCssPreview = svg.slice(0,1200) } catch(e){ fontCssPreview = String(e.message).slice(0,500) }
   return Response.json({ ...info, fontCssLen, fontCssPreview: fontCssPreview.slice(0,800) })
 }
