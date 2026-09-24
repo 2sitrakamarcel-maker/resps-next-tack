@@ -27,23 +27,25 @@ export function buildSvg(data, date = new Date()) {
   const dayPctStr = dayStats.dayPct !== null ? `${dayStats.dayPct > 0 ? '+' : ''}${dayStats.dayPct.toFixed(1)}%` : '-'
   const dayPctColor = dayPctStr === '-' ? '#0F172A' : dayPctStr.includes('+') ? '#059669' : '#DC2626'
 
-  // left: surcharge du jour - only % - more visible weight 800
+  // left: surcharge du jour - only % - bigger body typography 900
   const leftCard = `
     <g>
       <rect x="40" y="200" width="485" height="560" rx="24" fill="white"/>
-      <text x="282" y="270" font-family="Barlow Condensed, Barlow, sans-serif" font-size="14" font-weight="800" fill="#0F172A" text-anchor="middle" letter-spacing="3">SURCHARGE DU JOUR</text>
-      <text x="282" y="400" font-family="Barlow Condensed, Barlow, sans-serif" font-size="96" font-weight="900" fill="${isRest ? '#0F172A' : dayPctColor}" text-anchor="middle" letter-spacing="-2">${isRest ? '—' : dayPctStr}</text>
-      <text x="282" y="450" font-family="Barlow, sans-serif" font-size="14" font-weight="700" fill="#0F172A" text-anchor="middle">${isRest ? 'Repos' : `${dayStats.filled}/${dayStats.total} exos`}</text>
-      <rect x="80" y="500" width="405" height="2" fill="#0F172A" opacity="0.1"/>
-      <text x="282" y="540" font-family="Barlow Condensed, sans-serif" font-size="12" font-weight="800" fill="#0F172A" text-anchor="middle" letter-spacing="2">${esc(dayName)} • ${esc(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }))}</text>
+      <text x="282" y="275" font-family="Barlow Condensed, Barlow, sans-serif" font-size="16" font-weight="900" fill="#0F172A" text-anchor="middle" letter-spacing="3">SURCHARGE DU JOUR</text>
+      <text x="282" y="420" font-family="Barlow Condensed, Barlow, sans-serif" font-size="110" font-weight="900" fill="${isRest ? '#0F172A' : dayPctColor}" text-anchor="middle" letter-spacing="-3">${isRest ? '—' : dayPctStr}</text>
+      <text x="282" y="475" font-family="Barlow, sans-serif" font-size="18" font-weight="800" fill="#0F172A" text-anchor="middle">${isRest ? 'Repos' : `${dayStats.filled}/${dayStats.total} exos • ${dayStats.curTotal} reps`}</text>
+      <rect x="80" y="520" width="405" height="2" fill="#0F172A" opacity="0.12"/>
+      <text x="282" y="560" font-family="Barlow Condensed, sans-serif" font-size="13" font-weight="800" fill="#0F172A" text-anchor="middle" letter-spacing="2.5">${esc(dayName)} • ${esc(date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' }))}</text>
+      <text x="282" y="590" font-family="Barlow, sans-serif" font-size="12" font-weight="600" fill="#6B7280" text-anchor="middle">${isRest ? 'Récup active' : `vs ${dayStats.lastTotal || 0} last • ${global.pctCount} exos`}</text>
     </g>
   `
 
   const detailContent = (() => {
     if (isRest) {
       return `
-        <text x="812" y="440" font-family="Barlow Condensed, sans-serif" font-size="20" font-weight="800" fill="#0F172A" text-anchor="middle">💤 REPOS</text>
-        <text x="812" y="480" font-family="Barlow, sans-serif" font-size="14" font-weight="600" fill="#0F172A" text-anchor="middle">Récup active</text>
+        <text x="812" y="440" font-family="Barlow Condensed, sans-serif" font-size="22" font-weight="900" fill="#0F172A" text-anchor="middle">REPOS</text>
+        <text x="812" y="480" font-family="Barlow, sans-serif" font-size="16" font-weight="700" fill="#0F172A" text-anchor="middle">Récup active • ${esc(dayName)}</text>
+        <text x="812" y="510" font-family="Barlow, sans-serif" font-size="12" fill="#6B7280" text-anchor="middle">Aucun exo prévu</text>
       `
     }
     const rows = dayStats.perExo.slice(0, 4).map((ex, i) => {
@@ -54,17 +56,19 @@ export function buildSvg(data, date = new Date()) {
       const cur = esc(ex.cur || '-')
       const last = esc(ex.last || '-')
       const repsLabel = `${ex.curSum || 0} reps`
+      const seriesLabel = `S${ex.series || ''} ${ex.repMin}-${ex.repMax} @${ex.weight ?? 0}kg`
       return `
         <g>
           <rect x="575" y="${y}" width="405" height="78" rx="16" fill="${i % 2 === 0 ? '#F9FAFB' : '#FFFFFF'}"/>
-          <text x="595" y="${y+28}" font-family="Barlow Condensed, Barlow, sans-serif" font-size="15" font-weight="800" fill="#0F172A">${esc(ex.exercise.slice(0, 28))}</text>
-          <text x="595" y="${y+52}" font-family="Barlow, sans-serif" font-size="13" font-weight="600" fill="#0F172A">${cur} • ${repsLabel} / ${last}</text>
+          <text x="595" y="${y+28}" font-family="Barlow Condensed, Barlow, sans-serif" font-size="17" font-weight="900" fill="#0F172A">${esc(ex.exercise.slice(0, 28))}</text>
+          <text x="595" y="${y+48}" font-family="Barlow, sans-serif" font-size="11" font-weight="600" fill="#6B7280">${esc(seriesLabel)}</text>
+          <text x="595" y="${y+66}" font-family="Barlow, sans-serif" font-size="13" font-weight="700" fill="#0F172A">${cur} • ${repsLabel} / ${last}</text>
           <rect x="880" y="${y+22}" width="72" height="32" rx="12" fill="${pctBg}"/>
-          <text x="916" y="${y+42}" font-family="Barlow, sans-serif" font-size="13" font-weight="800" fill="${pctCol}" text-anchor="middle">${pct}</text>
+          <text x="916" y="${y+42}" font-family="Barlow, sans-serif" font-size="13" font-weight="900" fill="${pctCol}" text-anchor="middle">${pct}</text>
         </g>
       `
     }).join('')
-    return rows || `<text x="812" y="440" font-family="Barlow, sans-serif" font-size="14" fill="#0F172A" text-anchor="middle">Aucun exo</text>`
+    return rows || `<text x="812" y="440" font-family="Barlow, sans-serif" font-size="16" fill="#0F172A" text-anchor="middle">Aucun exo</text>`
   })()
 
   return `<?xml version="1.0" encoding="UTF-8"?>
@@ -87,9 +91,10 @@ export function buildSvg(data, date = new Date()) {
   ${leftCard}
   <g>
     <rect x="555" y="200" width="485" height="560" rx="24" fill="white"/>
-    <text x="812" y="270" font-family="Barlow Condensed, sans-serif" font-size="14" font-weight="800" fill="#0F172A" text-anchor="middle" letter-spacing="3">DÉTAIL — ${esc(dayName)}</text>
+    <text x="812" y="265" font-family="Barlow Condensed, sans-serif" font-size="16" font-weight="900" fill="#0F172A" text-anchor="middle" letter-spacing="2.5">DÉTAIL — ${esc(dayName)}</text>
+    <text x="812" y="285" font-family="Barlow, sans-serif" font-size="11" font-weight="600" fill="#6B7280" text-anchor="middle">${dayStats.filled}/${dayStats.total} exos</text>
     ${detailContent}
-    <text x="812" y="730" font-family="Barlow, sans-serif" font-size="11" font-weight="700" fill="#0F172A" text-anchor="middle">${dayStats.filled}/${dayStats.total} exos • stay hard</text>
+    <text x="812" y="740" font-family="Barlow, sans-serif" font-size="11" font-weight="800" fill="#0F172A" text-anchor="middle" letter-spacing="1">stay hard</text>
   </g>
 </svg>`
 }
