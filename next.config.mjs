@@ -1,9 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
+  serverExternalPackages: ['@resvg/resvg-js', 'sharp'],
   outputFileTracingIncludes: {
-    '/api/og-image': ['./public/fonts/**', './node_modules/harfbuzzjs/**', './node_modules/satori/yoga.wasm'],
-    '/api/cron/publish': ['./public/fonts/**', './node_modules/harfbuzzjs/**', './node_modules/satori/yoga.wasm'],
+    '/api/og-image': ['./public/fonts/**'],
+    '/api/cron/publish': ['./public/fonts/**'],
     '/api/debug-font': ['./public/fonts/**'],
   },
 };
